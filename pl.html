@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Najlepsze polskie mapy - Strona główna</title>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background: url(/assets/images/tło/tło.png) no-repeat center center fixed;
+            background-size: cover;
+            color: white;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .menu {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            padding: 15px 30px;
+            margin: 20px auto;
+            max-width: 1200px;
+            background: url(/assets/images/tło/tło1.png) center/cover;
+            border-radius: 12px;
+            border: 2px solid gold;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: gold;
+        }
+
+        .logo img {
+            height: 50px;
+            transition: transform 0.3s ease;
+        }
+
+        .logo img:hover {
+            transform: scale(1.05);
+        }
+
+        .center {
+            display: flex;
+            gap: 25px;
+        }
+
+        .center a {
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            letter-spacing: 1px;
+            position: relative;
+            padding-bottom: 5px;
+        }
+
+        .center a::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0%;
+            height: 2px;
+            background: lime;
+            transition: width 0.3s ease;
+        }
+
+        .center a:hover::after {
+            width: 100%;
+        }
+
+        .right {
+            display: flex;
+            gap: 10px;
+        }
+
+        .guzik-login,
+        .guzik-register {
+            padding: 10px 22px;
+            border-radius: 6px;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .guzik-login {
+            border: 2px solid lime;
+            background: transparent;
+        }
+
+        .guzik-login:hover {
+            background: lime;
+            color: black;
+        }
+
+        .guzik-register {
+            border: 2px solid lime;
+            background: linear-gradient(135deg, #0c7c00, #16c200);
+        }
+
+        .guzik-register:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 0, 0.5);
+        }
+
+        /* Style dla panelu użytkownika */
+        .user-panel {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+
+        .user-panel:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid gold;
+            object-fit: cover;
+        }
+
+        .user-name {
+            font-weight: bold;
+            color: white;
+        }
+
+        .dropdown-icon {
+            font-size: 1.2em;
+            color: gold;
+            transition: transform 0.3s;
+        }
+
+        .user-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            width: 160px;
+            background: #111;
+            border: 2px solid gold;
+            border-radius: 8px;
+            margin-top: 10px;
+            z-index: 1000;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.8);
+        }
+
+        .user-dropdown a {
+            display: block;
+            padding: 12px 15px;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .user-dropdown a:hover {
+            background: gold;
+            color: black;
+        }
+
+        .user-panel.active .user-dropdown {
+            display: block;
+        }
+
+        .user-panel.active .dropdown-icon {
+            transform: rotate(180deg);
+        }
+
+        @media (max-width: 768px) {
+            .menu {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .center {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .right {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .guzik-login,
+            .guzik-register {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+        .szukaj {
+            max-width: 600px;
+            margin: 60px auto;
+            padding: 30px;
+            background: rgba(0, 0, 0, 0.75);
+            border: 2px solid gold;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .szukaj .title {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .szukaj .title img {
+            width: 80px;
+            filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.6));
+        }
+
+        .szukaj .title h3 {
+            margin: 0;
+            font-size: 1.6em;
+            letter-spacing: 1px;
+            color: gold;
+        }
+
+        .szukaj input[type="search"],
+        .szukaj select {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 8px;
+            border: 2px solid lime;
+            background: #111;
+            color: white;
+            font-size: 1em;
+            outline: none;
+            transition: border 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .szukaj select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='gold' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 18px;
+        }
+
+        .szukaj input:focus,
+        .szukaj select:focus {
+            border-color: gold;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .szukaj button {
+            width: 100%;
+            padding: 14px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: bold;
+            letter-spacing: 1px;
+            color: black;
+            background: linear-gradient(135deg, lime, gold);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-top: 5px;
+        }
+
+        .szukaj button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 255, 0, 0.6);
+        }
+
+        @media (max-width: 600px) {
+            .szukaj {
+                margin: 40px 15px;
+                padding: 25px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="menu">
+        <div class="logo">
+            <a href="/pl.html"><img src="/assets/images/logo/logo.png" alt="Logo"></a>
+            Najlepsze polskie mapy
+        </div>
+        <div class="center">
+            <a href="/pl.html">STRONA GŁÓWNA</a>
+            <a href="/pl/mapy.html">MAPY</a>
+        </div>
+        <div class="right">
+            {% if user %}
+            <div class="user-panel" onclick="this.classList.toggle('active')">
+                <img src="/assets/images/avatar_default.png" alt="Avatar" class="user-avatar">
+                <span class="user-name">{{ user }}</span>
+                <i class="bx bx-chevron-down dropdown-icon"></i>
+                <div class="user-dropdown">
+                    <a href="/pl/profil.html"><i class="bx bx-user"></i> PROFIL</a>
+                    <a href="/pl/mapy/dodaj.html"><i class="bx bx-plus"></i> DODAJ MAPĘ</a>
+                    <a href="/logout"><i class="bx bx-log-out"></i> WYLOGUJ SIĘ</a>
+                </div>
+            </div>
+            {% else %}
+            <a href="/pl/auth/login.html" class="guzik-login">Zaloguj się</a>
+            <a href="/pl/auth/register.html" class="guzik-register">Zarejestruj się</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="szukaj">
+        <div class="title">
+            <img src="/assets/images/logo/logo.png" alt="Logo">
+            <h3>Znajdź mapę</h3>
+        </div>
+        <input type="search" placeholder="Wpisz nazwę mapy...">
+        <select name="Wersja" id="Versia">
+            <option value="" disabled selected>Wybierz wersję</option>
+            <option value="1.21.11">1.21.11</option>
+            <option value="1.21.10">1.21.10</option>
+            <option value="1.21.9">1.21.9</option>
+            <option value="1.21.8">1.21.8</option>
+            <option value="1.21.7">1.21.7</option>
+            <option value="1.21.6">1.21.6</option>
+            <option value="1.21.5">1.21.5</option>
+            <option value="1.21.4">1.21.4</option>
+            <option value="1.21.3">1.21.3</option>
+            <option value="1.21.2">1.21.2</option>
+            <option value="1.21.1">1.21.1</option>
+            <option value="1.21">1.21</option>
+            <option value="1.20.6">1.20.6</option>
+            <option value="1.20.5">1.20.5</option>
+            <option value="1.20.4">1.20.4</option>
+            <option value="1.20.3">1.20.3</option>
+            <option value="1.20.2">1.20.2</option>
+            <option value="1.20.1">1.20.1</option>
+            <option value="1.20">1.20</option>
+            <option value="1.19.4">1.19.4</option>
+            <option value="1.19.3">1.19.3</option>
+            <option value="1.19.2">1.19.2</option>
+            <option value="1.19.1">1.19.1</option>
+            <option value="1.19">1.19</option>
+            <option value="1.18.2">1.18.2</option>
+            <option value="1.18.1">1.18.1</option>
+            <option value="1.18">1.18</option>
+            <option value="1.17.1">1.17.1</option>
+            <option value="1.17">1.17</option>
+            <option value="1.16.5">1.16.5</option>
+            <option value="1.16.4">1.16.4</option>
+            <option value="1.16.3">1.16.3</option>
+            <option value="1.16.2">1.16.2</option>
+            <option value="1.16.1">1.16.1</option>
+            <option value="1.16">1.16</option>
+            <option value="1.15.2">1.15.2</option>
+            <option value="1.15.1">1.15.1</option>
+            <option value="1.15">1.15</option>
+            <option value="1.14.4">1.14.4</option>
+            <option value="1.14.3">1.14.3</option>
+            <option value="1.14.2">1.14.2</option>
+            <option value="1.14.1">1.14.1</option>
+            <option value="1.14">1.14</option>
+            <option value="1.13.2">1.13.2</option>
+            <option value="1.13.1">1.13.1</option>
+            <option value="1.13">1.13</option>
+            <option value="1.12.2">1.12.2</option>
+            <option value="1.12.1">1.12.1</option>
+            <option value="1.12">1.12</option>
+            <option value="1.11.2">1.11.2</option>
+            <option value="1.11.1">1.11.1</option>
+            <option value="1.11">1.11</option>
+            <option value="1.10.2">1.10.2</option>
+            <option value="1.10.1">1.10.1</option>
+            <option value="1.10">1.10</option>
+            <option value="1.9.4">1.9.4</option>
+            <option value="1.9.3">1.9.3</option>
+            <option value="1.9.2">1.9.2</option>
+            <option value="1.9.1">1.9.1</option>
+            <option value="1.9">1.9</option>
+            <option value="1.8.9">1.8.9</option>
+            <option value="1.8.8">1.8.8</option>
+            <option value="1.8.7">1.8.7</option>
+            <option value="1.8.6">1.8.6</option>
+            <option value="1.8.5">1.8.5</option>
+            <option value="1.8.4">1.8.4</option>
+            <option value="1.8.3">1.8.3</option>
+            <option value="1.8.2">1.8.2</option>
+            <option value="1.8.1">1.8.1</option>
+            <option value="1.8">1.8</option>
+        </select>
+        <select name="Typ" id="Typ">
+            <option value="" disabled selected>Wybierz typ mapy</option>
+            <option value="Przygoda">Przygoda</option>
+            <option value="Parkour">Parkour</option>
+            <option value="Survival">Survival</option>
+            <option value="Horror">Horror</option>
+            <option value="Mini-game">Mini-game</option>
+            <option value="Creative">Creative</option>
+            <option value="Pazzle">Pazzle</option>
+            <option value="Inne">Inne</option>
+        </select>
+        <button type="submit">Szukaj</button>
+    </div>
+</body>
+</html>

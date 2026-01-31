@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Najlepsze polskie mapy - Zaloguj się</title>
+    <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background: url(/assets/images/tło/tło.png) no-repeat center center fixed;
+            background-size: cover;
+            font-family: Arial, sans-serif;
+            color: white;
+            margin: 0;
+            padding: 0;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .formularz {
+            width: 100%;
+            max-width: 420px;
+            padding: 30px;
+
+            background: rgba(0, 0, 0, 0.75);
+            border: 2px solid gold;
+            border-radius: 15px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.9);
+        }
+
+        .formularz .title {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .formularz .title h2 {
+            margin: 0;
+            font-size: 2em;
+            color: gold;
+            letter-spacing: 1px;
+        }
+
+        .formularz .title p {
+            margin-top: 8px;
+            color: #ccc;
+        }
+
+        .panel span {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            margin-top: 15px;
+            font-weight: bold;
+            color: lime;
+        }
+
+        .panel i {
+            font-size: 1.2em;
+        }
+
+        .panel input {
+            width: 100%;
+            margin-top: 6px;
+            padding: 12px 14px;
+
+            border-radius: 8px;
+            border: 2px solid lime;
+            background: #111;
+            color: white;
+            font-size: 1em;
+
+            outline: none;
+            transition: border 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .panel input::placeholder {
+            color: #aaa;
+        }
+
+        .panel input:focus {
+            border-color: gold;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+        }
+
+        .error-message {
+            display: block;
+            margin-top: 10px;
+            color: #ff4d4d;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .panel button {
+            width: 100%;
+            margin-top: 20px;
+            padding: 14px;
+
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+
+            font-size: 1.1em;
+            font-weight: bold;
+            letter-spacing: 1px;
+
+            color: black;
+            background: linear-gradient(135deg, lime, gold);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .panel button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 255, 0, 0.6);
+        }
+
+        .panel p {
+            margin-top: 18px;
+            text-align: center;
+            color: #ccc;
+        }
+
+        .panel p a {
+            color: gold;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .panel p a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 480px) {
+            .formularz {
+                margin: 20px;
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="formularz">
+        <div class="title">
+            <h2>Zaloguj się</h2>
+            <p>Wprowadź dane logowania</p>
+        </div>
+        <div class="panel">
+            <span>
+                <i class="bx bx-user"></i>
+                Nazwa użytkownika
+            </span><br>
+            <input type="text" id="username" placeholder="Wpisz nazwę użytkownika"><br>
+            <span>
+                <i class="bx bx-lock-alt"></i>
+                Hasło
+            </span><br>
+            <input type="password" id="password" placeholder="Wpisz hasło"><br>
+            <span class="error-message" id="error-box"></span><br>
+            <button onclick="loginUser()">Zaloguj się</button><br>
+
+            <script>
+            async function loginUser() {
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+                const errorBox = document.getElementById('error-box');
+
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    window.location.href = '/pl.html';
+                } else {
+                    errorBox.innerText = result.message;
+                }
+            }
+            </script>
+            <p>Nie masz konta? <a href="/pl/auth/register.html">Zarejestruj się</a></p>           
+        </div>
+    </div>
+</body>
+</html>

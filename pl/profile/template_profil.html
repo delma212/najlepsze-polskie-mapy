@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil gracza {{ login }} - Najlepsze polskie mapy</title>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            background: url(/assets/images/tło/tło.png) no-repeat center center fixed;
+            background-size: cover;
+            color: white;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .menu {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            padding: 15px 30px;
+            margin: 20px auto;
+            max-width: 1200px;
+            background: url(/assets/images/tło/tło1.png) center/cover;
+            border-radius: 12px;
+            border: 2px solid gold;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+        }
+        .logo { display: flex; align-items: center; gap: 10px; font-size: 1.2em; font-weight: bold; color: gold; }
+        .logo img { height: 50px; }
+        .center { display: flex; gap: 25px; }
+        .center a { text-decoration: none; color: white; font-weight: bold; position: relative; padding-bottom: 5px; }
+        .center a::after { content: ""; position: absolute; bottom: 0; left: 0; width: 0%; height: 2px; background: lime; transition: width 0.3s ease; }
+        .center a:hover::after { width: 100%; }
+
+        .right { display: flex; gap: 10px; }
+        .user-panel { position: relative; display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 5px 10px; border-radius: 8px; transition: background 0.3s; }
+        .user-panel:hover { background: rgba(255, 255, 255, 0.1); }
+        .user-avatar { width: 40px; height: 40px; border-radius: 50%; border: 2px solid gold; object-fit: cover; }
+        .user-name { font-weight: bold; color: white; }
+        .dropdown-icon { font-size: 1.2em; color: gold; transition: transform 0.3s; }
+        .user-dropdown { display: none; position: absolute; top: 100%; right: 0; width: 160px; background: #111; border: 2px solid gold; border-radius: 8px; margin-top: 10px; z-index: 1000; box-shadow: 0 10px 25px rgba(0,0,0,0.8); }
+        .user-dropdown a { display: block; padding: 12px 15px; color: white; text-decoration: none; font-weight: bold; transition: background 0.3s, color 0.3s; }
+        .user-dropdown a:hover { background: gold; color: black; }
+        .user-panel.active .user-dropdown { display: block; }
+        .user-panel.active .dropdown-icon { transform: rotate(180deg); }
+        .guzik-login, .guzik-register { padding: 10px 22px; border-radius: 6px; text-decoration: none; color: white; font-weight: bold; transition: all 0.3s ease; border: 2px solid lime; }
+        .guzik-register { background: linear-gradient(135deg, #0c7c00, #16c200); }
+
+        .profile-header {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 40px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid gold;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid gold;
+            object-fit: cover;
+        }
+        .profile-info h1 { margin: 0; color: gold; font-size: 2.5em; }
+        .profile-info p { color: #aaa; margin: 5px 0 0; }
+
+        .maps-section {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+        .maps-section h2 { color: gold; border-bottom: 2px solid gold; padding-bottom: 10px; margin-bottom: 30px; }
+        
+        .maps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .map-card {
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid gold;
+            border-radius: 15px;
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+        .map-card:hover { transform: translateY(-10px); }
+        .map-card img { width: 100%; aspect-ratio: 16/9; object-fit: cover; border-bottom: 2px solid gold; }
+        .map-card-content { padding: 20px; }
+        .map-card-content h3 { margin: 0 0 10px; color: gold; }
+        .map-card-footer { padding: 15px 20px; background: rgba(255,255,255,0.05); display: flex; justify-content: space-between; }
+        .btn-view { color: lime; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="menu">
+        <div class="logo">
+            <a href="/pl.html"><img src="/assets/images/logo/logo.png" alt="Logo"></a>
+            Najlepsze polskie mapy
+        </div>
+        <div class="center">
+            <a href="/pl.html">STRONA GŁÓWNA</a>
+            <a href="/pl/mapy.html">MAPY</a>
+        </div>
+        <div class="right">
+            {% if user %}
+            <div class="user-panel" onclick="this.classList.toggle('active')">
+                <img src="/assets/images/avatar_default.png" alt="Avatar" class="user-avatar">
+                <span class="user-name">{{ user }}</span>
+                <i class="bx bx-chevron-down dropdown-icon"></i>
+                <div class="user-dropdown">
+                    <a href="/pl/profil.html"><i class="bx bx-user"></i> PROFIL</a>
+                    <a href="/pl/mapy/dodaj.html"><i class="bx bx-plus"></i> DODAJ MAPĘ</a>
+                    <a href="/logout"><i class="bx bx-log-out"></i> WYLOGUJ SIĘ</a>
+                </div>
+            </div>
+            {% else %}
+            <a href="/pl/auth/login.html" class="guzik-login">Zaloguj się</a>
+            <a href="/pl/auth/register.html" class="guzik-register">Zarejestruj się</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="profile-header">
+        <img src="{{ avatar }}" alt="Avatar" class="profile-avatar">
+        <div class="profile-info">
+            <h1>{{ login }}</h1>
+            <p class="profile-desc">{{ opis }}</p>
+        </div>
+    </div>
+
+    <div class="maps-section">
+        <h2>MAPY OPUBLIKOWANE PRZEZ {{ login }}</h2>
+        <div class="maps-grid">
+            <!-- MAPY_START -->
+            <!-- MAPY_END -->
+        </div>
+    </div>
+    <script>
+        // Globalny skrypt do aktualizacji awatara w menu
+        (async function() {
+            try {
+                const response = await fetch('/api/get-profile');
+                const result = await response.json();
+                if (result.success && result.data && result.data.avatar) {
+                    const menuAvatar = document.querySelector('.user-avatar');
+                    if (menuAvatar) menuAvatar.src = result.data.avatar;
+                }
+            } catch (e) {}
+        })();
+    </script>
+</body>
+</html>

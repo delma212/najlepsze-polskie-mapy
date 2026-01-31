@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wszystkie Mapy - Najlepsze polskie mapy</title>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            background: url(/assets/images/tło/tło.png) no-repeat center center fixed;
+            background-size: cover;
+            color: white;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .menu {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            padding: 15px 30px;
+            margin: 20px auto;
+            max-width: 1200px;
+            background: url(/assets/images/tło/tło1.png) center/cover;
+            border-radius: 12px;
+            border: 2px solid gold;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+        }
+        .logo { display: flex; align-items: center; gap: 10px; font-size: 1.2em; font-weight: bold; color: gold; }
+        .logo img { height: 50px; }
+        .center { display: flex; gap: 25px; }
+        .center a { text-decoration: none; color: white; font-weight: bold; position: relative; padding-bottom: 5px; }
+        .center a::after { content: ""; position: absolute; bottom: 0; left: 0; width: 0%; height: 2px; background: lime; transition: width 0.3s ease; }
+        .center a:hover::after { width: 100%; }
+
+        /* Search and Filter Section */
+        .search-section {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid gold;
+            border-radius: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 300px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 40px 12px 15px;
+            background: #111;
+            border: 2px solid #333;
+            border-radius: 8px;
+            color: white;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .search-box input:focus {
+            border-color: gold;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+
+        .search-box i {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: gold;
+            font-size: 1.2em;
+        }
+
+        .filter-box select {
+            padding: 12px 15px;
+            background: #111;
+            border: 2px solid #333;
+            border-radius: 8px;
+            color: white;
+            outline: none;
+            cursor: pointer;
+            min-width: 200px;
+        }
+
+        .filter-box select:focus {
+            border-color: gold;
+        }
+
+        .maps-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .map-card {
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid gold;
+            border-radius: 15px;
+            overflow: hidden;
+            transition: transform 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .map-card:hover { transform: translateY(-10px); box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3); }
+
+        .map-card img {
+            width: 100%;
+            aspect-ratio: 16/9;
+            object-fit: cover;
+            border-bottom: 2px solid gold;
+        }
+
+        .map-card-content { padding: 20px; flex-grow: 1; }
+        .map-card-content h3 { margin: 0 0 10px; color: gold; font-size: 1.5em; }
+        .map-card-content p { color: #ccc; font-size: 0.9em; line-height: 1.4; height: 4em; overflow: hidden; }
+        
+        .map-card-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+            font-size: 0.85em;
+        }
+        .map-card-meta span { background: rgba(255,255,255,0.1); padding: 4px 8px; border-radius: 4px; }
+        .map-card-meta span b { color: lime; }
+
+        .map-card-footer {
+            padding: 20px;
+            background: rgba(255,255,255,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-view {
+            padding: 8px 15px;
+            background: gold;
+            color: black;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+        .btn-view:hover { background: white; }
+
+        .btn-download-small {
+            color: lime;
+            text-decoration: none;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Style dla panelu użytkownika */
+        .user-panel {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+
+        .user-panel:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid gold;
+            object-fit: cover;
+        }
+
+        .user-name {
+            font-weight: bold;
+            color: white;
+        }
+
+        .dropdown-icon {
+            font-size: 1.2em;
+            color: gold;
+            transition: transform 0.3s;
+        }
+
+        .user-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            width: 160px;
+            background: #111;
+            border: 2px solid gold;
+            border-radius: 8px;
+            margin-top: 10px;
+            z-index: 1000;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.8);
+        }
+
+        .user-dropdown a {
+            display: block;
+            padding: 12px 15px;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .user-dropdown a:hover {
+            background: gold;
+            color: black;
+        }
+
+        .user-panel.active .user-dropdown {
+            display: block;
+        }
+
+        .user-panel.active .dropdown-icon {
+            transform: rotate(180deg);
+        }
+
+        .right {
+            display: flex;
+            gap: 10px;
+        }
+
+        .guzik-login,
+        .guzik-register {
+            padding: 10px 22px;
+            border-radius: 6px;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .guzik-login {
+            border: 2px solid lime;
+            background: transparent;
+        }
+
+        .guzik-login:hover {
+            background: lime;
+            color: black;
+        }
+
+        .guzik-register {
+            border: 2px solid lime;
+            background: linear-gradient(135deg, #0c7c00, #16c200);
+        }
+
+        .guzik-register:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 0, 0.5);
+        }
+
+        @media (max-width: 768px) {
+            .menu {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .center {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .right {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .guzik-login,
+            .guzik-register {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="menu">
+        <div class="logo">
+            <a href="/pl.html"><img src="/assets/images/logo/logo.png" alt="Logo"></a>
+            Najlepsze polskie mapy
+        </div>
+        <div class="center">
+            <a href="/pl.html">STRONA GŁÓWNA</a>
+            <a href="/pl/mapy.html">MAPY</a>
+        </div>
+        <div class="right">
+            {% if user %}
+            <div class="user-panel" onclick="this.classList.toggle('active')">
+                <img src="/assets/images/avatar_default.png" alt="Avatar" class="user-avatar">
+                <span class="user-name">{{ user }}</span>
+                <i class="bx bx-chevron-down dropdown-icon"></i>
+                <div class="user-dropdown">
+                    <a href="/pl/profil.html"><i class="bx bx-user"></i> PROFIL</a>
+                    <a href="/pl/mapy/dodaj.html"><i class="bx bx-plus"></i> DODAJ MAPĘ</a>
+                    <a href="/logout"><i class="bx bx-log-out"></i> WYLOGUJ SIĘ</a>
+                </div>
+            </div>
+            {% else %}
+            <a href="/pl/auth/login.html" class="guzik-login">Zaloguj się</a>
+            <a href="/pl/auth/register.html" class="guzik-register">Zarejestruj się</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <h1 style="text-align: center; color: gold; margin-top: 40px; font-size: 3em; text-shadow: 0 0 15px gold;">PRZEGLĄDAJ MAPY</h1>
+
+    <div class="search-section">
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Szukaj mapy po nazwie..." oninput="filterMaps()">
+            <i class="bx bx-search"></i>
+        </div>
+        <div class="filter-box">
+            <select id="categoryFilter" onchange="filterMaps()">
+                <option value="all">Wszystkie kategorie</option>
+                <option value="Przygoda">Przygoda</option>
+                <option value="Parkour">Parkour</option>
+                <option value="Survival">Survival</option>
+                <option value="Horror">Horror</option>
+                <option value="Mini-game">Mini-game</option>
+                <option value="Creative">Creative</option>
+                <option value="Pazzle">Pazzle</option>
+                <option value="Inne">Inne</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="maps-container">
+
+        <div class="map-card" id="map-brgz6j" data-category="Survival" data-name="5345t45t">
+            <img src="/assets/mapy/brgz6j/1.png" alt="Mapa">
+            <div class="map-card-content">
+                <h3>5345t45t</h3>
+                <p>5t45t45...</p>
+                <div class="map-card-meta">
+                    <span>Typ: <b>Survival</b></span>
+                    <span>Wersja: <b>1.20.1</b></span>
+                    <span>Autor: <a href="/pl/profile/D3lma_PL_.html" style="color: gold; text-decoration: none;"><b>D3lma_PL_</b></a></span>
+                    <span>Dodano: <b>25.01.2026</b></span>
+                </div>
+            </div>
+            <div class="map-card-footer">
+                <a href="/pl/mapy/brgz6j.html" class="btn-view">ZOBACZ WIĘCEJ</a>
+                <a href="https://www.mediafire.com/file/uqgvudojqud0uw6/Unfair_by_Kostek._Mapa_1.0.1.zip/file" class="btn-download-small"><i class="bx bx-download"></i> POBIERZ</a>
+            </div>
+        </div><!-- END map-brgz6j -->
+        
+
+        <div class="map-card" id="map-wf30vd" data-category="Pazzle" data-name="unfair by kostek">
+            <img src="/assets/mapy/wf30vd/1.png" alt="Mapa">
+            <div class="map-card-content">
+                <h3>Unfair by Kostek</h3>
+                <p>iujjijijijjij...</p>
+                <div class="map-card-meta">
+                    <span>Typ: <b>Pazzle</b></span>
+                    <span>Wersja: <b>1.20.1</b></span>
+                    <span>Autor: <a href="/pl/profile/D3lma_PL_.html" style="color: gold; text-decoration: none;"><b>D3lma_PL_</b></a></span>
+                    <span>Dodano: <b>23.01.2026</b></span>
+                </div>
+            </div>
+            <div class="map-card-footer">
+                <a href="/pl/mapy/wf30vd.html" class="btn-view">ZOBACZ WIĘCEJ</a>
+                <a href="https://www.mediafire.com/file/uqgvudojqud0uw6/Unfair_by_Kostek._Mapa_1.0.1.zip/file" class="btn-download-small"><i class="bx bx-download"></i> POBIERZ</a>
+            </div>
+        </div><!-- END map-wf30vd -->
+        
+        <!-- Tutaj będą dynamicznie dodawane kolejne mapy -->
+    </div>
+
+    <script>
+        // Globalny skrypt do aktualizacji awatara w menu
+        (async function() {
+            try {
+                const response = await fetch('/api/get-profile');
+                const result = await response.json();
+                if (result.success && result.data && result.data.avatar) {
+                    const menuAvatar = document.querySelector('.user-avatar');
+                    if (menuAvatar) menuAvatar.src = result.data.avatar;
+                }
+            } catch (e) {}
+        })();
+
+        function filterMaps() {
+            const searchText = document.getElementById('searchInput').value.toLowerCase();
+            const category = document.getElementById('categoryFilter').value;
+            const cards = document.querySelectorAll('.map-card');
+
+            cards.forEach(card => {
+                const name = card.getAttribute('data-name') || "";
+                const cat = card.getAttribute('data-category') || "";
+                
+                const matchesSearch = name.includes(searchText);
+                const matchesCategory = category === 'all' || cat === category;
+
+                if (matchesSearch && matchesCategory) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>

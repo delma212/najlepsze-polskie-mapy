@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil użytkownika</title>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background: url(/assets/images/tło/tło.png) no-repeat center center fixed;
+            background-size: cover;
+            color: white;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .menu {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            padding: 15px 30px;
+            margin: 20px auto;
+            max-width: 1200px;
+            background: url(/assets/images/tło/tło1.png) center/cover;
+            border-radius: 12px;
+            border: 2px solid gold;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: gold;
+        }
+
+        .logo img {
+            height: 50px;
+            transition: transform 0.3s ease;
+        }
+
+        .logo img:hover {
+            transform: scale(1.05);
+        }
+
+        .center {
+            display: flex;
+            gap: 25px;
+        }
+
+        .center a {
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            letter-spacing: 1px;
+            position: relative;
+            padding-bottom: 5px;
+        }
+
+        .center a::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0%;
+            height: 2px;
+            background: lime;
+            transition: width 0.3s ease;
+        }
+
+        .center a:hover::after {
+            width: 100%;
+        }
+
+        .right {
+            display: flex;
+            gap: 10px;
+        }
+
+        .guzik-login,
+        .guzik-register {
+            padding: 10px 22px;
+            border-radius: 6px;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .guzik-login {
+            border: 2px solid lime;
+            background: transparent;
+        }
+
+        .guzik-login:hover {
+            background: lime;
+            color: black;
+        }
+
+        .guzik-register {
+            border: 2px solid lime;
+            background: linear-gradient(135deg, #0c7c00, #16c200);
+        }
+
+        .guzik-register:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 0, 0.5);
+        }
+
+        /* Style dla panelu użytkownika */
+        .user-panel {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+
+        .user-panel:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid gold;
+            object-fit: cover;
+        }
+
+        .user-name {
+            font-weight: bold;
+            color: white;
+        }
+
+        .dropdown-icon {
+            font-size: 1.2em;
+            color: gold;
+            transition: transform 0.3s;
+        }
+
+        .user-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            width: 160px;
+            background: #111;
+            border: 2px solid gold;
+            border-radius: 8px;
+            margin-top: 10px;
+            z-index: 1000;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.8);
+        }
+
+        .user-dropdown a {
+            display: block;
+            padding: 12px 15px;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .user-dropdown a:hover {
+            background: gold;
+            color: black;
+        }
+
+        .user-panel.active .user-dropdown {
+            display: block;
+        }
+
+        .user-panel.active .dropdown-icon {
+            transform: rotate(180deg);
+        }
+
+        @media (max-width: 768px) {
+            .menu {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .center {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .right {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .guzik-login,
+            .guzik-register {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+        .szukaj {
+            max-width: 600px;
+            margin: 60px auto;
+            padding: 30px;
+
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid gold;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+
+            text-align: center;
+        }
+
+        .szukaj .title {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .szukaj .title img {
+            width: 80px;
+            filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.6));
+        }
+
+        .szukaj .title h3 {
+            margin: 0;
+            font-size: 1.6em;
+            letter-spacing: 1px;
+            color: gold;
+        }
+
+        .szukaj input[type="search"] {
+            width: 100%;
+            padding: 14px 16px;
+            margin-bottom: 15px;
+
+            border-radius: 8px;
+            border: 2px solid lime;
+            background: #111;
+            color: white;
+            font-size: 1em;
+            outline: none;
+
+            transition: border 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .szukaj input::placeholder {
+            color: #aaa;
+        }
+
+        .szukaj input:focus {
+            border-color: gold;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .szukaj button {
+            width: 100%;
+            padding: 14px;
+
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+
+            font-size: 1.1em;
+            font-weight: bold;
+            letter-spacing: 1px;
+
+            color: black;
+            background: linear-gradient(135deg, lime, gold);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .szukaj button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 255, 0, 0.6);
+        }
+
+        @media (max-width: 600px) {
+            .szukaj {
+                margin: 40px 15px;
+                padding: 25px;
+            }
+
+            .szukaj .title img {
+                width: 65px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="menu">
+        <div class="logo">
+            <a href="/pl.html"><img src="/assets/images/logo/logo.png" alt="Logo"></a>
+            Najlepsze polskie mapy
+        </div>
+        <div class="center">
+            <a href="/pl.html">STRONA GŁÓWNA</a>
+            <a href="/pl/mapy.html">MAPY</a>
+        </div>
+        <div class="right">
+            {% if user %}
+            <div class="user-panel" onclick="this.classList.toggle('active')">
+                <img src="/assets/images/avatar_default.png" alt="Avatar" class="user-avatar">
+                <span class="user-name">{{ user }}</span>
+                <i class="bx bx-chevron-down dropdown-icon"></i>
+                <div class="user-dropdown">
+                    <a href="/pl/profil.html"><i class="bx bx-user"></i> PROFIL</a>
+                    <a href="/pl/mapy/dodaj.html"><i class="bx bx-plus"></i> DODAJ MAPĘ</a>
+                    <a href="/logout"><i class="bx bx-log-out"></i> WYLOGUJ SIĘ</a>
+                </div>
+            </div>
+            {% else %}
+            <a href="/pl/auth/login.html" class="guzik-login">Zaloguj się</a>
+            <a href="/pl/auth/register.html" class="guzik-register">Zarejestruj się</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="settings-panel" style="max-width: 1200px; margin: 40px auto; padding: 40px; background: rgba(0,0,0,0.8); border: 2px solid gold; border-radius: 20px;">
+        <h2 style="color: gold; border-bottom: 2px solid gold; padding-bottom: 10px; margin-bottom: 30px;">USTAWIENIA PROFILU</h2>
+        <div style="display: flex; gap: 40px; align-items: flex-start; flex-wrap: wrap;">
+            <div style="text-align: center;">
+                <img id="profile-avatar" src="/assets/images/avatar_default.png" alt="Avatar" style="width: 150px; height: 150px; border-radius: 50%; border: 4px solid gold; object-fit: cover; margin-bottom: 15px;">
+                <br>
+                <button onclick="openLogoModal()" style="background: gold; color: black; border: none; padding: 10px 20px; border-radius: 5px; font-weight: bold; cursor: pointer;">ZMIEŃ LOGO</button>
+            </div>
+            <div style="flex-grow: 1; min-width: 300px;">
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; color: #aaa;">TWÓJ NICK</label>
+                    <input type="text" id="profile-nickname" value="{{ user }}" style="width: 100%; padding: 12px; background: #111; border: 1px solid #444; color: white; border-radius: 5px;">
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; color: #aaa;">OPIS PROFILU</label>
+                    <textarea id="profile-description" style="width: 100%; height: 100px; padding: 12px; background: #111; border: 1px solid #444; color: white; border-radius: 5px; resize: vertical;" placeholder="Napisz coś o sobie..."></textarea>
+                </div>
+                <button onclick="saveProfile()" style="background: lime; color: black; border: none; padding: 12px 30px; border-radius: 5px; font-weight: bold; cursor: pointer;">ZAPISZ ZMIANY</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal dla logo -->
+    <div id="logo-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; align-items: center; justify-content: center;">
+        <div style="background: #111; border: 2px solid gold; border-radius: 15px; padding: 30px; width: 400px; text-align: center; position: relative;">
+            <h3 style="color: gold; margin-top: 0;">WGRAJ NOWE LOGO</h3>
+            <div id="logo-preview-box" onclick="document.getElementById('logo-input').click()" style="width: 150px; height: 150px; border: 2px dashed gold; border-radius: 50%; margin: 20px auto; display: flex; align-items: center; justify-content: center; cursor: pointer; overflow: hidden;">
+                <span id="logo-placeholder" style="color: #555;">Kliknij aby wgrać</span>
+                <img id="logo-preview-img" style="display: none; width: 100%; height: 100%; object-fit: cover;">
+            </div>
+            <input type="file" id="logo-input" accept="image/*" style="display: none;" onchange="previewLogo(this)">
+            <div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px;">
+                <button onclick="saveLogo()" style="background: lime; color: black; border: none; padding: 10px 25px; border-radius: 5px; font-weight: bold; cursor: pointer;">ZAPISZ</button>
+                <button onclick="closeLogoModal()" style="background: #444; color: white; border: none; padding: 10px 25px; border-radius: 5px; font-weight: bold; cursor: pointer;">ANULUJ</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="my-maps" style="max-width: 1200px; margin: 40px auto; padding: 20px;">
+        <h2 style="color: gold; border-bottom: 2px solid gold; padding-bottom: 10px; margin-bottom: 30px;">MOJE OPUBLIKOWANE MAPY</h2>
+        <div class="maps-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
+            <div class="map-card-mini" id="my-map-brgz6j" style="background: rgba(0,0,0,0.8); border: 1px solid gold; border-radius: 10px; overflow: hidden; position: relative;">
+                <img src="/assets/mapy/brgz6j/1.png" style="width: 100%; aspect-ratio: 16/9; object-fit: cover;">
+                <div style="padding: 15px;">
+                    <h4 style="margin: 0; color: gold;">5345t45t</h4>
+                    <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+                        <a href="/pl/mapy/brgz6j.html" style="color: lime; text-decoration: none; font-size: 0.9em;">ZOBACZ</a>
+                        <button onclick="deleteMap('brgz6j')" style="background: #ff4444; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8em;">USUŃ</button>
+                    </div>
+                </div>
+            </div><!-- END my-map-brgz6j -->
+        
+            <div class="map-card-mini" id="my-map-wf30vd" style="background: rgba(0,0,0,0.8); border: 1px solid gold; border-radius: 10px; overflow: hidden; position: relative;">
+                <img src="/assets/mapy/wf30vd/1.png" style="width: 100%; aspect-ratio: 16/9; object-fit: cover;">
+                <div style="padding: 15px;">
+                    <h4 style="margin: 0; color: gold;">Unfair by Kostek</h4>
+                    <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+                        <a href="/pl/mapy/wf30vd.html" style="color: lime; text-decoration: none; font-size: 0.9em;">ZOBACZ</a>
+                        <button onclick="deleteMap('wf30vd')" style="background: #ff4444; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8em;">USUŃ</button>
+                    </div>
+                </div>
+            </div><!-- END my-map-wf30vd -->
+        
+            
+        
+            <!-- Mapy będą dodawane tutaj dynamicznie -->
+        </div>
+    </div>
+
+    <script>
+        let selectedLogoFile = null;
+
+        // Załaduj dane profilu przy starcie
+        window.onload = async function() {
+            try {
+                const response = await fetch('/api/get-profile');
+                const result = await response.json();
+                if (result.success && result.data) {
+                    if (result.data.nickname) document.getElementById('profile-nickname').value = result.data.nickname;
+                    if (result.data.description) document.getElementById('profile-description').value = result.data.description;
+                    if (result.data.avatar) {
+                        document.getElementById('profile-avatar').src = result.data.avatar;
+                        // Aktualizacja awatara w menu
+                        const menuAvatar = document.querySelector('.user-avatar');
+                        if (menuAvatar) menuAvatar.src = result.data.avatar;
+                    }
+                }
+            } catch (e) { console.error(e); }
+        };
+
+        function openLogoModal() {
+            document.getElementById('logo-modal').style.display = 'flex';
+        }
+
+        function closeLogoModal() {
+            document.getElementById('logo-modal').style.display = 'none';
+            document.getElementById('logo-preview-img').style.display = 'none';
+            document.getElementById('logo-placeholder').style.display = 'block';
+            selectedLogoFile = null;
+        }
+
+        function previewLogo(input) {
+            if (input.files && input.files[0]) {
+                selectedLogoFile = input.files[0];
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.getElementById('logo-preview-img');
+                    img.src = e.target.result;
+                    img.style.display = 'block';
+                    document.getElementById('logo-placeholder').style.display = 'none';
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        async function saveLogo() {
+            if (!selectedLogoFile) {
+                alert("Wybierz najpierw plik!");
+                return;
+            }
+            await saveProfile();
+            closeLogoModal();
+        }
+
+        async function saveProfile() {
+            const nickname = document.getElementById('profile-nickname').value;
+            const description = document.getElementById('profile-description').value;
+            
+            const formData = new FormData();
+            formData.append('nickname', nickname);
+            formData.append('description', description);
+            if (selectedLogoFile) {
+                formData.append('logo', selectedLogoFile);
+            }
+
+            try {
+                const response = await fetch('/api/update-profile', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+                if (result.success) {
+                    alert("Profil został zaktualizowany!");
+                    location.reload();
+                } else {
+                    alert("Błąd: " + result.message);
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert("Wystąpił błąd podczas zapisywania.");
+            }
+        }
+
+        async function deleteMap(mapId) {
+            if (!confirm('Czy na pewno chcesz usunąć tę mapę?')) return;
+
+            try {
+                const response = await fetch(`/api/usun-mape/${mapId}`, {
+                    method: 'POST'
+                });
+                const result = await response.json();
+                if (result.success) {
+                    alert("Mapa została usunięta!");
+                    location.reload();
+                } else {
+                    alert("Błąd: " + result.message);
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert("Wystąpił błąd podczas usuwania mapy.");
+            }
+        }
+    </script>
+</body>
+</html>

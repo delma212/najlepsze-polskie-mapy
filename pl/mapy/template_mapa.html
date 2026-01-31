@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ nazwa_mapy }} - Najlepsze polskie mapy</title>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            background: url(/assets/images/tło/tło.png) no-repeat center center fixed;
+            background-size: cover;
+            color: white;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .menu {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            padding: 15px 30px;
+            margin: 20px auto;
+            max-width: 1200px;
+            background: url(/assets/images/tło/tło1.png) center/cover;
+            border-radius: 12px;
+            border: 2px solid gold;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+        }
+        .logo { display: flex; align-items: center; gap: 10px; font-size: 1.2em; font-weight: bold; color: gold; }
+        .logo img { height: 50px; }
+        .center { display: flex; gap: 25px; }
+        .center a { text-decoration: none; color: white; font-weight: bold; position: relative; padding-bottom: 5px; }
+        .center a::after { content: ""; position: absolute; bottom: 0; left: 0; width: 0%; height: 2px; background: lime; transition: width 0.3s ease; }
+        .center a:hover::after { width: 100%; }
+
+        .right { display: flex; gap: 10px; }
+        .user-panel { position: relative; display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 5px 10px; border-radius: 8px; transition: background 0.3s; }
+        .user-panel:hover { background: rgba(255, 255, 255, 0.1); }
+        .user-avatar { width: 40px; height: 40px; border-radius: 50%; border: 2px solid gold; object-fit: cover; }
+        .user-name { font-weight: bold; color: white; }
+        .dropdown-icon { font-size: 1.2em; color: gold; transition: transform 0.3s; }
+        .user-dropdown { display: none; position: absolute; top: 100%; right: 0; width: 160px; background: #111; border: 2px solid gold; border-radius: 8px; margin-top: 10px; z-index: 1000; box-shadow: 0 10px 25px rgba(0,0,0,0.8); }
+        .user-dropdown a { display: block; padding: 12px 15px; color: white; text-decoration: none; font-weight: bold; transition: background 0.3s, color 0.3s; }
+        .user-dropdown a:hover { background: gold; color: black; }
+        .user-panel.active .user-dropdown { display: block; }
+        .user-panel.active .dropdown-icon { transform: rotate(180deg); }
+        .guzik-login, .guzik-register { padding: 10px 22px; border-radius: 6px; text-decoration: none; color: white; font-weight: bold; transition: all 0.3s ease; border: 2px solid lime; }
+        .guzik-register { background: linear-gradient(135deg, #0c7c00, #16c200); }
+        
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 30px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid gold;
+            border-radius: 20px;
+        }
+        .map-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 2px solid gold;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .map-info-main h1 { margin: 0; color: gold; font-size: 2.5em; }
+        .map-meta { display: flex; gap: 20px; margin-top: 10px; color: #ccc; }
+        .map-meta span b { color: lime; }
+        
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        .gallery img {
+            width: 100%;
+            border-radius: 10px;
+            border: 2px solid #444;
+            transition: transform 0.3s;
+        }
+        .gallery img:hover { transform: scale(1.02); border-color: gold; }
+        
+        .description {
+            line-height: 1.6;
+            font-size: 1.1em;
+            background: rgba(255,255,255,0.05);
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 40px;
+        }
+        .description h2 { color: gold; margin-top: 0; }
+        
+        .download-section {
+            text-align: center;
+            padding: 30px;
+            background: rgba(0, 255, 0, 0.1);
+            border-radius: 15px;
+            border: 1px solid lime;
+        }
+        .btn-download {
+            display: inline-block;
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #0c7c00, #16c200);
+            color: white;
+            text-decoration: none;
+            font-size: 1.5em;
+            font-weight: bold;
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+        .btn-download:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,255,0,0.4); }
+        
+        .author-box {
+            margin-top: 40px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: #111;
+            border-radius: 10px;
+            border-left: 5px solid gold;
+        }
+        .author-box img { width: 50px; height: 50px; border-radius: 50%; border: 2px solid gold; }
+    </style>
+</head>
+<body>
+    <div class="menu">
+        <div class="logo">
+            <a href="/pl.html"><img src="/assets/images/logo/logo.png" alt="Logo"></a>
+            Najlepsze polskie mapy
+        </div>
+        <div class="center">
+            <a href="/pl.html">STRONA GŁÓWNA</a>
+            <a href="/pl/mapy.html">MAPY</a>
+        </div>
+        <div class="right">
+            {% if user %}
+            <div class="user-panel" onclick="this.classList.toggle('active')">
+                <img src="/assets/images/avatar_default.png" alt="Avatar" class="user-avatar">
+                <span class="user-name">{{ user }}</span>
+                <i class="bx bx-chevron-down dropdown-icon"></i>
+                <div class="user-dropdown">
+                    <a href="/pl/profil.html"><i class="bx bx-user"></i> PROFIL</a>
+                    <a href="/pl/mapy/dodaj.html"><i class="bx bx-plus"></i> DODAJ MAPĘ</a>
+                    <a href="/logout"><i class="bx bx-log-out"></i> WYLOGUJ SIĘ</a>
+                </div>
+            </div>
+            {% else %}
+            <a href="/pl/auth/login.html" class="guzik-login">Zaloguj się</a>
+            <a href="/pl/auth/register.html" class="guzik-register">Zarejestruj się</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="map-header">
+            <div class="map-info-main">
+                <h1>{{ nazwa_mapy }}</h1>
+                <div class="map-meta">
+                    <span>Typ: <b>{{ typ_mapy }}</b></span>
+                    <span>Wersja: <b>{{ wersja_mapy }}</b></span>
+                    <span>Dodano: <b>{{ data_dodania }}</b></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="gallery">
+            <!-- ZDJECIA_START -->
+            {% for img in zdjecia %}
+            <img src="{{ img }}" alt="Zdjęcie mapy">
+            {% endfor %}
+            <!-- ZDJECIA_END -->
+        </div>
+
+        <div class="description">
+            <h2>Opis mapy</h2>
+            <p>{{ opis_mapy }}</p>
+        </div>
+
+        <div class="download-section">
+            <a href="{{ link_pobierania }}" class="btn-download"><i class="bx bx-download"></i> POBIERZ MAPĘ</a>
+        </div>
+
+        <div class="author-box">
+            <img src="/assets/images/avatar_default.png" alt="Autor">
+            <div>
+                <span>Autor: {{ autor }}</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

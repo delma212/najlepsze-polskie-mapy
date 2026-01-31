@@ -1,0 +1,13 @@
+{
+    "id": "ql0pm1",
+    "autor": "testuser",
+    "nazwa": "Super Przygoda",
+    "opis": "To jest niesamowita mapa przygodowa!",
+    "link": "https://example.com/mapa.zip",
+    "typ": "Przygoda",
+    "wersja": "1.21.1",
+    "data_dodania": "23.01.2026",
+    "zdjecia": [
+        "/assets/images/tło/tło1.png"
+    ]
+}

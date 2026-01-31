@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dodaj mape</title>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background: url(/assets/images/tło/tło.png) no-repeat center center fixed;
+            background-size: cover;
+            color: white;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .menu {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            padding: 15px 30px;
+            margin: 20px auto;
+            max-width: 1200px;
+            background: url(/assets/images/tło/tło1.png) center/cover;
+            border-radius: 12px;
+            border: 2px solid gold;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: gold;
+        }
+
+        .logo img {
+            height: 50px;
+            transition: transform 0.3s ease;
+        }
+
+        .logo img:hover {
+            transform: scale(1.05);
+        }
+
+        .center {
+            display: flex;
+            gap: 25px;
+        }
+
+        .center a {
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            letter-spacing: 1px;
+            position: relative;
+            padding-bottom: 5px;
+        }
+
+        .center a::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0%;
+            height: 2px;
+            background: lime;
+            transition: width 0.3s ease;
+        }
+
+        .center a:hover::after {
+            width: 100%;
+        }
+
+        .right {
+            display: flex;
+            gap: 10px;
+        }
+
+        .guzik-login,
+        .guzik-register {
+            padding: 10px 22px;
+            border-radius: 6px;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .guzik-login {
+            border: 2px solid lime;
+            background: transparent;
+        }
+
+        .guzik-login:hover {
+            background: lime;
+            color: black;
+        }
+
+        .guzik-register {
+            border: 2px solid lime;
+            background: linear-gradient(135deg, #0c7c00, #16c200);
+        }
+
+        .guzik-register:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 0, 0.5);
+        }
+
+        /* Style dla panelu użytkownika */
+        .user-panel {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+
+        .user-panel:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid gold;
+            object-fit: cover;
+        }
+
+        .user-name {
+            font-weight: bold;
+            color: white;
+        }
+
+        .dropdown-icon {
+            font-size: 1.2em;
+            color: gold;
+            transition: transform 0.3s;
+        }
+
+        .user-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            width: 160px;
+            background: #111;
+            border: 2px solid gold;
+            border-radius: 8px;
+            margin-top: 10px;
+            z-index: 1000;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.8);
+        }
+
+        .user-dropdown a {
+            display: block;
+            padding: 12px 15px;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .user-dropdown a:hover {
+            background: gold;
+            color: black;
+        }
+
+        .user-panel.active .user-dropdown {
+            display: block;
+        }
+
+        .user-panel.active .dropdown-icon {
+            transform: rotate(180deg);
+        }
+
+        @media (max-width: 768px) {
+            .menu {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .center {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .right {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .guzik-login,
+            .guzik-register {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+        /* Style dla formularza dodawania mapy */
+        .formularz {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 40px;
+            background: rgba(0, 0, 0, 0.85);
+            border: 2px solid gold;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.9);
+        }
+
+        .formularz .title {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .formularz .title img {
+            height: 80px;
+            margin-bottom: 10px;
+            filter: drop-shadow(0 0 10px gold);
+        }
+
+        .formularz .title h3 {
+            font-size: 2em;
+            color: gold;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .formularz span {
+            display: block;
+            margin-top: 20px;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+            color: #eee;
+        }
+
+        .formularz span b {
+            color: lime;
+            margin-right: 5px;
+        }
+
+        .formularz input[type="text"],
+        .formularz textarea,
+        .formularz select {
+            width: 100%;
+            padding: 12px 15px;
+            background: #111;
+            border: 2px solid #333;
+            border-radius: 8px;
+            color: white;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .formularz input:focus,
+        .formularz textarea:focus,
+        .formularz select:focus {
+            border-color: lime;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+        }
+
+        .formularz textarea {
+            height: 120px;
+            resize: vertical;
+        }
+
+        .zdjecie {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            border: 1px dashed gold;
+        }
+
+        .zdjecie .title h2 {
+            margin: 0;
+            color: gold;
+            font-size: 1.4em;
+        }
+
+        .zdjecie .title p {
+            margin: 5px 0 15px;
+            color: #aaa;
+            font-size: 0.9em;
+        }
+
+        .zdjecie input[type="file"] {
+            margin-bottom: 20px;
+            color: #ccc;
+        }
+
+        .zdjecia {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .zdjecia div {
+            aspect-ratio: 16/9;
+            background: #222;
+            border: 2px solid #444;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .zdjecia div::after {
+            content: 'Brak zdjęcia';
+            font-size: 0.7em;
+            color: #555;
+            position: absolute;
+            z-index: 1;
+        }
+        .zdjecia div img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: relative;
+            z-index: 2;
+        }
+
+        .formularz button[type="submit"] {
+            width: 100%;
+            margin-top: 40px;
+            padding: 15px;
+            background: linear-gradient(135deg, #0c7c00, #16c200);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 1.3em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .formularz button[type="submit"]:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 255, 0, 0.4);
+            filter: brightness(1.1);
+        }
+
+        .formularz button[type="submit"]:disabled {
+            background: #444;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu">
+        <div class="logo">
+            <a href="/pl.html"><img src="/assets/images/logo/logo.png" alt="Logo"></a>
+            Najlepsze polskie mapy
+        </div>
+        <div class="center">
+            <a href="/pl.html">STRONA GŁÓWNA</a>
+            <a href="/pl/mapy.html">MAPY</a>
+        </div>
+        <div class="right">
+            {% if user %}
+            <div class="user-panel" onclick="this.classList.toggle('active')">
+                <img src="/assets/images/avatar_default.png" alt="Avatar" class="user-avatar">
+                <span class="user-name">{{ user }}</span>
+                <i class="bx bx-chevron-down dropdown-icon"></i>
+                <div class="user-dropdown">
+                    <a href="/pl/profil.html"><i class="bx bx-user"></i> PROFIL</a>
+                    <a href="/pl/mapy/dodaj.html"><i class="bx bx-plus"></i> DODAJ MAPĘ</a>
+                    <a href="/logout"><i class="bx bx-log-out"></i> WYLOGUJ SIĘ</a>
+                </div>
+            </div>
+            {% else %}
+            <a href="/pl/auth/login.html" class="guzik-login">Zaloguj się</a>
+            <a href="/pl/auth/register.html" class="guzik-register">Zarejestruj się</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="formularz">
+        <div class="title">
+            <img src="/assets/images/logo/logo.png" alt="Logo">
+            <h3>Dodaj nową mapę</h3>
+        </div>
+        <span><b>1.</b> Nazwa mapy</span><br>
+        <input type="text" id="nazwa" placeholder="Wpisz nazwę mapy..." oninput="validateForm()"><br>
+        <span><b>2.</b> Opis mapy</span><br>
+        <textarea id="opis" placeholder="Wpisz opis mapy..." oninput="validateForm()"></textarea><br>
+        <span><b>3.</b> Link do mapy</span><br>
+        <input type="text" id="link" placeholder="Wpisz link do mapy..." oninput="validateForm()"><br>
+        <span><b>4.</b> Kategoria mapy</span><br>
+        <select name="Typ" id="Typ" onchange="validateForm()">
+            <option value="" disabled selected>Wybierz typ mapy</option>
+            <option value="Przygoda">Przygoda</option>
+            <option value="Parkour">Parkour</option>
+            <option value="Survival">Survival</option>
+            <option value="Horror">Horror</option>
+            <option value="Mini-game">Mini-game</option>
+            <option value="Creative">Creative</option>
+            <option value="Pazzle">Pazzle</option>
+            <option value="Inne">Inne</option>
+        </select><br>
+        <span><b>5.</b> Wersja mapy</span><br>
+        <select name="Wersja" id="Versia" onchange="validateForm()">
+            <option value="" disabled selected>Wybierz wersję</option>
+            <option value="1.21.11">1.21.11</option>
+            <option value="1.21.10">1.21.10</option>
+            <option value="1.21.9">1.21.9</option>
+            <option value="1.21.8">1.21.8</option>
+            <option value="1.21.7">1.21.7</option>
+            <option value="1.21.6">1.21.6</option>
+            <option value="1.21.5">1.21.5</option>
+            <option value="1.21.4">1.21.4</option>
+            <option value="1.21.3">1.21.3</option>
+            <option value="1.21.2">1.21.2</option>
+            <option value="1.21.1">1.21.1</option>
+            <option value="1.21">1.21</option>
+            <option value="1.20.6">1.20.6</option>
+            <option value="1.20.5">1.20.5</option>
+            <option value="1.20.4">1.20.4</option>
+            <option value="1.20.3">1.20.3</option>
+            <option value="1.20.2">1.20.2</option>
+            <option value="1.20.1">1.20.1</option>
+            <option value="1.20">1.20</option>
+            <option value="1.19.4">1.19.4</option>
+            <option value="1.19.3">1.19.3</option>
+            <option value="1.19.2">1.19.2</option>
+            <option value="1.19.1">1.19.1</option>
+            <option value="1.19">1.19</option>
+            <option value="1.18.2">1.18.2</option>
+            <option value="1.18.1">1.18.1</option>
+            <option value="1.18">1.18</option>
+            <option value="1.17.1">1.17.1</option>
+            <option value="1.17">1.17</option>
+            <option value="1.16.5">1.16.5</option>
+            <option value="1.16.4">1.16.4</option>
+            <option value="1.16.3">1.16.3</option>
+            <option value="1.16.2">1.16.2</option>
+            <option value="1.16.1">1.16.1</option>
+            <option value="1.16">1.16</option>
+            <option value="1.15.2">1.15.2</option>
+            <option value="1.15.1">1.15.1</option>
+            <option value="1.15">1.15</option>
+            <option value="1.14.4">1.14.4</option>
+            <option value="1.14.3">1.14.3</option>
+            <option value="1.14.2">1.14.2</option>
+            <option value="1.14.1">1.14.1</option>
+            <option value="1.14">1.14</option>
+            <option value="1.13.2">1.13.2</option>
+            <option value="1.13.1">1.13.1</option>
+            <option value="1.13">1.13</option>
+            <option value="1.12.2">1.12.2</option>
+            <option value="1.12.1">1.12.1</option>
+            <option value="1.12">1.12</option>
+            <option value="1.11.2">1.11.2</option>
+            <option value="1.11.1">1.11.1</option>
+            <option value="1.11">1.11</option>
+            <option value="1.10.2">1.10.2</option>
+            <option value="1.10.1">1.10.1</option>
+            <option value="1.10">1.10</option>
+            <option value="1.9.4">1.9.4</option>
+            <option value="1.9.3">1.9.3</option>
+            <option value="1.9.2">1.9.2</option>
+            <option value="1.9.1">1.9.1</option>
+            <option value="1.9">1.9</option>
+            <option value="1.8.9">1.8.9</option>
+            <option value="1.8.8">1.8.8</option>
+            <option value="1.8.7">1.8.7</option>
+            <option value="1.8.6">1.8.6</option>
+            <option value="1.8.5">1.8.5</option>
+            <option value="1.8.4">1.8.4</option>
+            <option value="1.8.3">1.8.3</option>
+            <option value="1.8.2">1.8.2</option>
+            <option value="1.8.1">1.8.1</option>
+            <option value="1.8">1.8</option>
+        </select>
+        <div class="zdjecie">
+            <div class="title">
+                <h2>Wprowadź zdjęcie</h2>
+                <p>min 2 max 5 (Pierwsze zdjęcie będzie logiem mapy)</p>
+            </div>
+            <input type="file" id="file-input" accept="image/*" multiple>
+            <div class="zdjecia" id="preview-container">
+                <div class="preview-slot"></div>
+                <div class="preview-slot"></div>
+                <div class="preview-slot"></div>
+                <div class="preview-slot"></div>
+                <div class="preview-slot"></div>
+            </div>
+        </div>
+        <button type="submit" id="submit-btn" onclick="submitMap()" disabled>Dodaj mapę</button>
+    </div>
+
+    <script>
+        let selectedFiles = [];
+
+        // Globalny skrypt do aktualizacji awatara w menu
+        (async function() {
+            try {
+                const response = await fetch('/api/get-profile');
+                const result = await response.json();
+                if (result.success && result.data && result.data.avatar) {
+                    const menuAvatar = document.querySelector('.user-avatar');
+                    if (menuAvatar) menuAvatar.src = result.data.avatar;
+                }
+            } catch (e) {}
+        })();
+
+        function validateForm() {
+            const nazwa = document.getElementById('nazwa').value.trim();
+            const opis = document.getElementById('opis').value.trim();
+            const link = document.getElementById('link').value.trim();
+            const typ = document.getElementById('Typ').value;
+            const wersja = document.getElementById('Versia').value;
+            const btn = document.getElementById('submit-btn');
+
+            const isValid = nazwa && opis && link && typ && wersja && selectedFiles.length >= 2;
+            btn.disabled = !isValid;
+        }
+
+        document.getElementById('file-input').addEventListener('change', function(e) {
+            const files = Array.from(e.target.files);
+            
+            // Dodajemy nowe pliki do listy, zachowując limit 5
+            files.forEach(file => {
+                if (selectedFiles.length < 5 && file.type.startsWith('image/')) {
+                    selectedFiles.push(file);
+                }
+            });
+
+            updatePreviews();
+            validateForm();
+            
+            // Reset inputa, aby można było dodać te same pliki ponownie jeśli trzeba
+            this.value = '';
+        });
+
+        function updatePreviews() {
+            const slots = document.querySelectorAll('.preview-slot');
+            slots.forEach(slot => slot.innerHTML = '');
+
+            selectedFiles.forEach((file, i) => {
+                if (i < slots.length) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const img = document.createElement('img');
+                        img.src = event.target.result;
+                        img.title = "Kliknij aby usunąć";
+                        img.onclick = () => {
+                            selectedFiles.splice(i, 1);
+                            updatePreviews();
+                            validateForm();
+                        };
+                        slots[i].appendChild(img);
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        async function submitMap() {
+            const nazwa = document.getElementById('nazwa').value;
+            const opis = document.getElementById('opis').value;
+            const link = document.getElementById('link').value;
+            const typ = document.getElementById('Typ').value;
+            const wersja = document.getElementById('Versia').value;
+
+            const formData = new FormData();
+            formData.append('nazwa', nazwa);
+            formData.append('opis', opis);
+            formData.append('link', link);
+            formData.append('typ', typ);
+            formData.append('wersja', wersja);
+            
+            selectedFiles.forEach((file, index) => {
+                formData.append('file_' + (index + 1), file);
+            });
+            formData.append('file_count', selectedFiles.length);
+
+            try {
+                const response = await fetch('/api/dodaj-mape', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+                if (result.success) {
+                    alert("Mapa została dodana!");
+                    window.location.href = '/pl/mapy.html';
+                } else {
+                    alert("Błąd: " + result.message);
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert("Wystąpił błąd podczas dodawania mapy.");
+            }
+        }
+    </script>
+</body>
+</html>
